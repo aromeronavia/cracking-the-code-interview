@@ -75,6 +75,11 @@ any node. So, given a node C in a list of the form A->B->C->D->E, its
 impossible to return a list without the node C: A->B->D->E if we dont have the first reference to the list
 """
 
+
+"""
+2.4
+"""
+
 def sumNumbersWithLists(listA, listB):
     if not (listA and listB):
         return 0
