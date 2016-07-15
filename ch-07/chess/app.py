@@ -1,7 +1,6 @@
 from board import Board
 from turn_manager import manageTurn
 from piece import Piece
-from pawn import Pawn
 from empty_coord import EmptyCoord
 
 class App:
@@ -14,11 +13,12 @@ class App:
 
     def executeMovement(self, movement):
         (originX, originY, destinationX, destinationY) = self.parseInputMove(movement)
-        print originX, originY, destinationX, destinationY
         origin = self.getPiecesWithCoords(originX, originY)
         destination = self.getPiecesWithCoords(destinationX, destinationY)
         if not isinstance(origin, Piece):
-            raise 'the origin is not a piece'
+            raise Exception('the origin is not a piece')
+        if self.turn != origin.color:
+            raise Exception('turn of the other color')
 
         self.performMovementIfPossible(origin, destination)
 
@@ -26,15 +26,16 @@ class App:
         return self.board.board[x][y]
 
     def performMovementIfPossible(self, origin, destination):
-        print type(origin), type(destination)
         if isinstance(destination, Piece):
             if origin.canEat(origin, destination):
                 self.movePieces(origin, destination)
+            else:
+                raise Exception('cant move to destination')
         else:
-            print origin, destination
-            print origin.x, origin.y, destination.x, destination.y
             if origin.canMove(destination):
                 self.movePieces(origin, destination)
+            else:
+                raise Exception('cant move to destination')
 
     def movePieces(self, origin, destination):
         self.board.board[destination.x][destination.y] = origin
@@ -60,10 +61,10 @@ class App:
 
     def parseInputMove(self, movement):
         (originCoords, destinationCoords) = movement.split('-')
-        originY = self.getColumnIndexByCharacter(originCoords[0])
-        originX = int(originCoords[1])
-        destinationY = self.getColumnIndexByCharacter(destinationCoords[0])
-        destinationX = int(destinationCoords[1])
+        originX = self.getColumnIndexByCharacter(originCoords[0])
+        originY = int(originCoords[1])
+        destinationX = self.getColumnIndexByCharacter(destinationCoords[0])
+        destinationY = int(destinationCoords[1])
         return (originX, originY, destinationX, destinationY)
 
 app = App(Board())
