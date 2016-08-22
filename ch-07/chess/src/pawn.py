@@ -8,18 +8,22 @@ class WhitePawn(Piece):
         color = 'white'
         super(WhitePawn, self).__init__(x, y, color)
 
+
     def canEat(self, destination):
-        return
+        if (self.x - destination.x != 1
+                and self.y - destination.y != 1):
+            return False
+        return True
 
     def canMove(self, destination):
         if self.firstMove:
-            if abs(destination.x - self.x) > 2:
+            if destination.x - self.x > 2:
                 return False
 
             self.firstMove = False
             return True
         else:
-            if abs(destination.x - self.x) != 1:
+            if destination.x - self.x != 1:
                 return False
             return True
 
@@ -40,13 +44,13 @@ class BlackPawn(Piece):
 
     def canMove(self, destination):
         if self.firstMove:
-            if abs(destination.x - self.x) > 2:
+            if self.x - destination.x > 2:
                 return False
 
             self.firstMove = False
             return True
         else:
-            if abs(destination.x - self.x) != 1:
+            if self.x - destination.x != 1:
                 return False
             return True
 
